@@ -1,4 +1,5 @@
 import React from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Header } from 'react-native-elements';
 
@@ -93,93 +94,95 @@ const style = StyleSheet.create({
 
 
 
-export default function EditContato({route,navigation}) {
-    const [getNome,setNome] = useState();
-    const [getCpf,setEmail] = useState();
-    const [getTelefone,setTelefone] = useState();
-    const [getId,setId] = useState();
-//     const [getAlterar,setAlterar] = useState();
+export default function EditContato({ route, navigation }) {
+    const [getNome, setNome] = useState();
+    const [getCpf, setEmail] = useState();
+    const [getTelefone, setTelefone] = useState();
+    const [getId, setId] = useState();
+    //     const [getAlterar,setAlterar] = useState();
 
-    useEffect(()=>{
-        if(route.params){
-            const { nome } =  route.params 
-            const { telefone } =  route.params 
-            const { email } =  route.params 
-            const { id } =  route.params
-//             const { alterar } =  route.params
+    useEffect(() => {
+        if (route.params) {
+            const { nome } = route.params
+            const { telefone } = route.params
+            const { email } = route.params
+            const { id } = route.params
+            //             const { alterar } =  route.params
 
             setNome(nome)
             setTelefone(telefone)
             setEmail(email)
             setId(id)
-//             setAlterar(alterar)
+            //             setAlterar(alterar)
         }
 
-    },[]) 
-    function alterarDados(){
-    axios.put('http://professornilson.com/testeservico/clientes/'+getId, {
-        nome: getNome,
-        telefone: getTelefone,
-        email: getEmail
-      })
-      .then(function (response) {
-        setNome('');
-        setEmail('');
-        setTelefone(''); 
-        showMessage({
-            message: "Registro Alterado com sucesso",
-            type: "success",
-          }); 
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });    
-}
-
-function excluirDados(){
-
-    
-    Alert.alert(
-        "Atenção",
-        "Deseja excluir o registro?",
-        [
-          {
-            text: "Cancel",
-            onPress: () => console.log("Cancel Pressed"),
-            style: "cancel"
-          },
-          { text: "OK", onPress: () => (
-            axios.delete('http://professornilson.com/testeservico/clientes/'+getId)
+    }, [])
+    function alterarDados() {
+        axios.put('http://professornilson.com/testeservico/clientes/' + getId, {
+            nome: getNome,
+            telefone: getTelefone,
+            email: getEmail
+        })
             .then(function (response) {
-              setNome('');
-              setEmail('');
-              setTelefone(''); 
-              showMessage({
-                  message: "Registro Excluido com sucesso",
-                  type: "danger",
-                }); 
-              console.log(response);
+                setNome('');
+                setEmail('');
+                setTelefone('');
+                showMessage({
+                    message: "Registro Alterado com sucesso",
+                    type: "success",
+                });
+                console.log(response);
             })
             .catch(function (error) {
-              console.log(error);
-            }) 
-          ) }
-        ],
-        { cancelable: false }
-      );
+                console.log(error);
+            });
+    }
+
+    function excluirDados() {
 
 
-    
-}
+        Alert.alert(
+            "Atenção",
+            "Deseja excluir o registro?",
+            [
+                {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel"
+                },
+                {
+                    text: "OK", onPress: () => (
+                        axios.delete('http://professornilson.com/testeservico/clientes/' + getId)
+                            .then(function (response) {
+                                setNome('');
+                                setEmail('');
+                                setTelefone('');
+                                showMessage({
+                                    message: "Registro Excluido com sucesso",
+                                    type: "danger",
+                                });
+                                console.log(response);
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            })
+                    )
+                }
+            ],
+            { cancelable: false }
+        );
 
-    
-        return (
+
+
+    }
+
+
+    return (
         <NativeBaseProvider >
             <Header
-                leftComponent={<Button  
-                title="<"
-                onPress={()=>navigation.navigate('TelaUser')}
+                leftComponent={<Button
+                    title="<"
+                    onPress={() => navigation.navigate('TelaUser')}
                 ></Button>}
                 centerComponent={{ text: 'Editar/Deletar usuário', style: { color: '#fff' } }}
 
@@ -201,7 +204,7 @@ function excluirDados(){
                             Nome
                         </FormControl.Label>
                         <Input style={style.input} onChangeText={text => setNome(text)}
-            value={getNome}/>
+                            value={getNome} />
                     </FormControl>
                     <FormControl>
                         <FormControl.Label
@@ -213,7 +216,7 @@ function excluirDados(){
                             E-mail
                         </FormControl.Label>
                         <Input style={style.input} onChangeText={text => setEmail(text)}
-            value={getEmail}/>
+                            value={getEmail} />
                     </FormControl>
                     <FormControl>
                         <FormControl.Label
@@ -225,13 +228,13 @@ function excluirDados(){
                             Telefone
                         </FormControl.Label>
                         <Input style={style.input} onChangeText={text => setTelefone(text)}
-            value={getTelefone}/>
+                            value={getTelefone} />
                     </FormControl>
 
 
 
-                    <Button style={style.buttonCadastro} mt="2" colorScheme="indigo" _text={{ color: '#fff' }}  onPress={() => alterarDados()}
-            />
+                    <Button style={style.buttonCadastro} mt="2" colorScheme="indigo" _text={{ color: '#fff' }} onPress={() => alterarDados()}
+                    >
                         Salvar
                     </Button>
                     <Button style={style.button} mt="2" colorScheme="indigo" _text={{ color: '#fff' }} onPress={() => excluirDados()}>
