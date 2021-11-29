@@ -172,7 +172,7 @@ export default function TelaUser({route,navigation}) {
                                 onPress={()=>navigation.navigate('CrudContato',{
                                    nome:linha.nome,
                                    telefone:linha.telefone,
-                                   cpf:linha.cpf,
+                                   email:linha.email,
                                    id:linha.id,
                                 })}
                               />
