@@ -1,7 +1,8 @@
 import { ListItem, Avatar } from 'react-native-elements';
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Header } from 'react-native-elements';
 
@@ -109,31 +110,43 @@ const style = StyleSheet.create({
 
 });
 export default function TelaUser({route,navigation}) {
-    
- 
-    const list = [
-        {
-            name: 'Aline Andrade',
-            telefone: '81 988553424',
-            avatar_url: 'https://media.istockphoto.com/photos/learn-to-love-yourself-first-picture-id1291208214?b=1&k=20&m=1291208214&s=170667a&w=0&h=sAq9SonSuefj3d4WKy4KzJvUiLERXge9VgZO-oqKUOo='
-        },
-        {
-            name: 'Chris Jackson',
-            telefone: '81 998759420',
-            avatar_url: 'https://images.unsplash.com/photo-1552058544-f2b08422138a?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cGVyc29ufGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'
-        },
-        {
-            name: 'Lucas Feitosa',
-            telefone: '81 983426789',
-            avatar_url: 'https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cGVyc29ufGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'
-        },
-        {
-            name: 'Clara Mattos',
-            telefone: '81 987408989',
-            avatar_url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cGVyc29ufGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'
-        }
+     const [getdata,setData] = useState([]);
 
-    ]
+  
+      useEffect(()=>{
+        
+        async function resgatarDados(){
+            const result = await axios(
+                'http://professornilson.com/testeservico/clientes',
+              );
+              setData(result.data);
+        }
+        resgatarDados();
+    })
+ 
+//     const list = [
+//         {
+//             name: 'Aline Andrade',
+//             telefone: '81 988553424',
+//             avatar_url: 'https://media.istockphoto.com/photos/learn-to-love-yourself-first-picture-id1291208214?b=1&k=20&m=1291208214&s=170667a&w=0&h=sAq9SonSuefj3d4WKy4KzJvUiLERXge9VgZO-oqKUOo='
+//         },
+//         {
+//             name: 'Chris Jackson',
+//             telefone: '81 998759420',
+//             avatar_url: 'https://images.unsplash.com/photo-1552058544-f2b08422138a?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cGVyc29ufGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'
+//         },
+//         {
+//             name: 'Lucas Feitosa',
+//             telefone: '81 983426789',
+//             avatar_url: 'https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cGVyc29ufGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'
+//         },
+//         {
+//             name: 'Clara Mattos',
+//             telefone: '81 987408989',
+//             avatar_url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cGVyc29ufGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'
+//         }
+
+//     ]
 
     
         return (
@@ -147,20 +160,24 @@ export default function TelaUser({route,navigation}) {
             <Box safeArea flex={1} style={style.body}>
 
                 <View>
-                    {
-                        list.map((l, i) => (
-                            
-                            <ListItem key={i} bottomDivider onPress={()=>navigation.navigate('CrudContato')} >
-                                <Avatar rounded
-                                   source={{uri: l.avatar_url}} />
-                                <ListItem.Content>
-                                    <ListItem.Title>{l.name}</ListItem.Title>
-                                    <ListItem.Subtitle>{l.telefone}</ListItem.Subtitle>
-                                </ListItem.Content>
-                                
-                            </ListItem>
-                        ))
-                    }
+                           {
+                            getdata.map((linha, i) => (
+                              <ListItem
+                                key={i}
+                                leftAvatar={{ source: { uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg' } }}
+                                title={linha.nome}
+                                subtitle={linha.telefone}
+                                bottomDivider
+                                chevron
+                                onPress={()=>navigation.navigate('CrudContato',{
+                                   nome:linha.nome,
+                                   telefone:linha.telefone,
+                                   email:linha.email,
+                                   id:linha.id,
+                                })}
+                              />
+                            ))
+                          } 
 
 
 
