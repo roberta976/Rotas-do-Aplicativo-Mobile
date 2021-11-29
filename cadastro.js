@@ -1,6 +1,13 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Header } from 'react-native-elements';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
+import FlashMessage from "react-native-flash-message";
+import { showMessage, hideMessage } from "react-native-flash-message";
+import axios from 'axios';
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 import {
   useFonts,
@@ -95,6 +102,41 @@ const style = StyleSheet.create({
 
 export default function Cadastro({ route, navigation }) {
 
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDPWtlTB70o1Ut1__yPEzoiATm5Pdw8Yz0",
+    authDomain: "aplicativo-mobile-51396.firebaseapp.com",
+    projectId: "aplicativo-mobile-51396",
+    storageBucket: "aplicativo-mobile-51396.appspot.com",
+    messagingSenderId: "962887189725",
+    appId: "1:962887189725:web:36bf292a765fb6630d8734",
+    measurementId: "G-1NJ91L9MN8"
+  };
+  const [getNome, setNome] = React.useState();
+  const [getCpf, setCpf] = React.useState();
+  const [getEmail, setEmail] = React.useState();
+  // const [getId, setId] = React.useState();
+  // const [getBotao, setBotao] = React.useState();
+
+
+  function registrarUser() {
+    const auth = getAuth();
+    createUserWithEmailAndPassword(auth, email, senha)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        navigation.navigate("Login")
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log("erro:", errorMessage);
+        setErro(errorMessage);
+      });
+  }
+
 
   return (
     <NativeBaseProvider >
@@ -112,7 +154,7 @@ export default function Cadastro({ route, navigation }) {
 
 
         <VStack space={3} mt="5">
-          <FormControl>
+          {/* <FormControl>
             <FormControl.Label
               _text={{
                 fontFamily: Poppins_600SemiBold,
@@ -122,7 +164,8 @@ export default function Cadastro({ route, navigation }) {
               }}>
               Nome
             </FormControl.Label>
-            <Input style={style.input} />
+            <Input style={style.input} onChangeText={text => setNome(text)}
+              value={getNome} />
           </FormControl>
           <FormControl>
             <FormControl.Label
@@ -133,8 +176,9 @@ export default function Cadastro({ route, navigation }) {
               }}>
               Cpf
             </FormControl.Label>
-            <Input style={style.input} />
-          </FormControl>
+            <Input style={style.input} onChangeText={text => setCpf(text)}
+              value={getCpf} />
+          </FormControl> */}
           <FormControl>
             <FormControl.Label
               _text={{
@@ -144,7 +188,8 @@ export default function Cadastro({ route, navigation }) {
               }}>
               E-mail
             </FormControl.Label>
-            <Input style={style.input} />
+            <Input style={style.input} onChangeText={email => setEmail(email)}
+            />
           </FormControl>
 
           <FormControl>
@@ -156,11 +201,11 @@ export default function Cadastro({ route, navigation }) {
               }}>
               Senha
             </FormControl.Label>
-            <Input style={style.input} type="password" />
+            <Input style={style.input} type="password" onChangeText={senha => setSenha(senha)} />
 
           </FormControl>
 
-          <Button style={style.buttonCadastro} mt="2" colorScheme="indigo" _text={{ color: '#4B77CC' }}>
+          <Button onPress={() => registrarUser()} style={style.buttonCadastro} mt="2" colorScheme="indigo" _text={{ color: '#4B77CC' }}>
             Salvar
           </Button>
 
