@@ -1,4 +1,8 @@
 import React from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 // import Icon from 'react-native-vector-icons/FontAwesome';
 // import { NavigationContainer } from '@react-navigation/native';
 // import { createStackNavigator } from '@react-navigation/stack';
@@ -90,11 +94,47 @@ const style = StyleSheet.create({
 
 });
 
-export default function Login({route,navigation}) {
+export default function Login({ route, navigation }) {
+    // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDPWtlTB70o1Ut1__yPEzoiATm5Pdw8Yz0",
+    authDomain: "aplicativo-mobile-51396.firebaseapp.com",
+    projectId: "aplicativo-mobile-51396",
+    storageBucket: "aplicativo-mobile-51396.appspot.com",
+    messagingSenderId: "962887189725",
+    appId: "1:962887189725:web:36bf292a765fb6630d8734",
+    measurementId: "G-1NJ91L9MN8"
+  };
+  // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const [email, setEmail] = React.useState();
+    const [senha, setSenha] = React.useState();
+    const [erro, setErro] = React.useState();
+
+    function conectarUser(){
+        const auth = getAuth();
+        signInWithEmailAndPassword(auth, email, senha)
+            .then((userCredential) => {
+                // Signed in
+                const user = userCredential.user;
+                console.log("Logado")
+                navigation.navigate("TelaUser")
+                // ...
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                setErro(errorMessage);
+                console.log("Erro:", errorMessage);
+            });
+    
+    }
 
 
-  
-        return (
+
+    return (
         <NativeBaseProvider >
             <Box safeArea flex={1} style={style.body}>
                 <Heading style={style.container} size="lg" fontWeight="600" color="coolGray.800">
@@ -121,7 +161,8 @@ export default function Login({route,navigation}) {
                             }}>
                             Login
                         </FormControl.Label>
-                        <Input style={style.input} />
+                        <Input style={style.input} value={email}
+                                onChangeText={email => setEmail(email)}/>
                     </FormControl>
                     <FormControl>
                         <FormControl.Label
@@ -132,7 +173,8 @@ export default function Login({route,navigation}) {
                             }}>
                             Senha
                         </FormControl.Label>
-                        <Input style={style.input} type="password" />
+                        <Input style={style.input} type="password" value={senha}
+                                onChangeText={senha => setEmail(senha)}/>
 
                     </FormControl>
                     <Link
@@ -141,10 +183,10 @@ export default function Login({route,navigation}) {
                         mt="1">
                         Esqueceu a senha?
                     </Link>
-                    <Button onPress={()=> navigation.navigate('TelaUser')} style={style.button} mt="2" colorScheme="indigo" _text={{ color: 'white' }}>
+                    <Button onPress={() => {conectarUser()}} style={style.button} mt="2" colorScheme="indigo" _text={{ color: 'white' }}>
                         Login
                     </Button>
-                    <Button onPress={()=> navigation.navigate('Cadastrar')} style={style.buttonCadastro} mt="2" colorScheme="indigo" _text={{ color: '#4B77CC' }}>
+                    <Button onPress={() => navigation.navigate('Cadastrar')} style={style.buttonCadastro} mt="2" colorScheme="indigo" _text={{ color: '#4B77CC' }}>
                         Cadastro
                     </Button>
 
